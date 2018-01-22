@@ -5,7 +5,7 @@ import './FullPost.css';
 
 class FullPost extends Component {
     state = {
-        locadedPost: null
+        loadedPost: null
     };
 
     componentDidUpdate() {
@@ -21,6 +21,14 @@ class FullPost extends Component {
         }
     }
 
+    deletePost = () => {
+        if (this.state.loadedPost) {
+            axios.delete('https://jsonplaceholder.typicode.com/posts/' + this.state.loadedPost.id).then(res => {
+                console.log(res);                
+            });
+        }
+    }
+
     render() {
         let post = null;
 
@@ -31,7 +39,7 @@ class FullPost extends Component {
                         <h1>{this.state.loadedPost.title}</h1>
                         <p>{this.state.loadedPost.body}</p>
                         <div className="Edit">
-                            <button className="Delete">Delete</button>
+                            <button onClick={this.deletePost} className="Delete">Delete</button>
                         </div>
                     </div>
                 );
