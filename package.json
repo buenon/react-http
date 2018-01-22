@@ -6,7 +6,8 @@
     "axios": "^0.17.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "react-scripts": "1.0.13"
+    "react-scripts": "1.0.13",
+    "react-spinners": "^0.2.5"
   },
   "scripts": {
     "start": "react-scripts start",

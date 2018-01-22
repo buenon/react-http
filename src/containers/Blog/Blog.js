@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from "axios";
+import { CircleLoader } from 'react-spinners';
 
 import Post from '../../components/Post/Post';
 import FullPost from '../../components/FullPost/FullPost';
@@ -9,19 +10,27 @@ import './Blog.css';
 class Blog extends Component {
     state = {
         posts: [],
-        selectedPostId: null
+        selectedPostId: null,
+        error: null
     };
 
     componentDidMount() {
         axios.get('https://jsonplaceholder.typicode.com/posts')
             .then(postsResp => {
-                axios.get('https://jsonplaceholder.typicode.com/users').then(usersResp => {
-                    let posts = postsResp.data.slice(0, 4).map(post => {
-                        return { ...post, author: usersResp.data[post.userId].name };
+                let posts = postsResp.data.slice(0, 4).map((post, i) => {
+                    axios.get('https://jsonplaceholder.typicode.com/users/' + post.userId).then(usersResp => {
+                        let newPosts = [...this.state.posts];
+                        newPosts[i] = { ...post, completed: true, author: usersResp.data.name }
+                        this.setState({ posts: newPosts });
                     });
 
-                    this.setState({ posts: posts });
+                    return { ...post, completed: false };
                 });
+
+                this.setState({ posts: posts });
+            })
+            .catch(error => {
+                this.setState({ error: error });
             });
     }
 
@@ -30,9 +39,19 @@ class Blog extends Component {
     }
 
     render() {
-        let posts = this.state.posts.map(post => {
-            return (<Post key={post.id} title={post.title} author={post.author} click={() => { this.postSelectedHandler(post.id) }} />);
-        });
+        let posts;
+
+        if (this.state.error) {
+            posts = <div style={{ textAlign: 'center' }}>Something went wrong...</div>
+        } else {
+            posts = this.state.posts.map(post => {
+                if (post.completed) {
+                    return (<Post key={post.id} title={post.title} author={post.author} click={() => { this.postSelectedHandler(post.id) }} />);
+                } else {
+                    return <CircleLoader key={post.id} color={'#0000ff'} />
+                }
+            });
+        }
 
         return (
             <div>

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import axios from "axios";
 
 import './FullPost.css';
@@ -11,11 +11,9 @@ class FullPost extends Component {
     componentDidUpdate() {
         if (this.props.id) {
             if (!this.state.loadedPost || (this.state.loadedPost.id !== this.props.id)) {
-                axios
-                    .get('https://jsonplaceholder.typicode.com/posts/' + this.props.id)
+                axios.get('https://jsonplaceholder.typicode.com/posts/' + this.props.id)
                     .then((resp) => {
-                        console.log(resp);
-                        this.setState({loadedPost: resp.data});
+                        console.log(resp); this.setState({ loadedPost: resp.data });
                     });
             }
         }
@@ -23,9 +21,10 @@ class FullPost extends Component {
 
     deletePost = () => {
         if (this.state.loadedPost) {
-            axios.delete('https://jsonplaceholder.typicode.com/posts/' + this.state.loadedPost.id).then(res => {
-                console.log(res);                
-            });
+            axios.delete('https://jsonplaceholder.typicode.com/posts/' + this.state.loadedPost.id)
+                .then(res => {
+                    console.log(res);
+                });
         }
     }
 
@@ -44,14 +43,10 @@ class FullPost extends Component {
                     </div>
                 );
             } else {
-                post = <p style={{
-                    textAlign: 'center'
-                }}>Loading...</p>;
+                post = <p style={{ textAlign: 'center' }}>Loading...</p>;
             }
         } else {
-            post = <p style={{
-                textAlign: 'center'
-            }}>Please select a Post!</p>;
+            post = <p style={{ textAlign: 'center' }}>Please select a Post!</p>;
         }
 
         return post;
